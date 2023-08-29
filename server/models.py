@@ -13,7 +13,7 @@ metadata = MetaData(naming_convention={
 
 db = SQLAlchemy(metadata=metadata)
 
-# Models go here!
+Models go here!
 class Product_Category(db.Model):
     __tablename__ = 'category'
 
