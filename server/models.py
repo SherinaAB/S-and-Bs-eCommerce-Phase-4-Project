@@ -32,13 +32,18 @@ class Product(db.Model, SerializerMixin):
     copy = db.Column(db.String(500))
     price = db.Column(db.Float)
     inventory = db.Column(db.Integer)
-    # product_category_id = db.Column(db.Integer)
-    # user_id=db.Column(db.Integer,db.ForeignKey('users.id'))
-    # category_relationship = db.relationship('Category', back_populates="product_relationship", cascade="all, delete")
+
+    user_id=db.Column(db.Integer,db.ForeignKey('users.id'))
+
     user_relationship = db.relationship('User', back_populates="product_relationship", cascade="all, delete")
-    # cart_relationship = db.relationship('Cart_Item', back_populates="product_relationship",cascade="all, delete")
+    cart_relationship = db.relationship('Cart_Item', back_populates="product_relationship")
 
     serialize_rules = ('-user_relationship',)
+
+    # product_category_id = db.Column(db.Integer)
+    # category_relationship = db.relationship('Category', back_populates="product_relationship", cascade="all, delete")
+    # cart_relationship = db.relationship('Cart_Item', back_populates="product_relationship",cascade="all, delete")
+    
 
 class Cart_Item(db.Model, SerializerMixin):
     __tablename__ = 'cart_items'
@@ -51,11 +56,11 @@ class Cart_Item(db.Model, SerializerMixin):
     # session_id=db.Column(db.Integer,db.ForeignKey('shopping_sessions.id'))
 
     product_relationship = db.relationship('Product', back_populates="cart_relationship")
-    user_relationship = db.relationship('User', back_populates="cart_relationship",primaryjoin="Product.user_id==User.id")
-    session_relationship = db.relationship('Shopping_Session', back_populates="cart_relationship")
-    
+    user_relationship = db.relationship('User', back_populates="cart_relationship")
 
-    serialize_rules = ('-session_relationship', '-product_relationship',)
+    serialize_rules = ('-product_relationship','-user_relationship',)
+
+    session_relationship = db.relationship('Shopping_Session', back_populates="cart_relationship")
 
 class Shopping_Session(db.Model, SerializerMixin):
     __tablename__ ='shopping_sessions'
@@ -66,7 +71,7 @@ class Shopping_Session(db.Model, SerializerMixin):
     user_id=db.Column(db.Integer,db.ForeignKey('users.id'))
     cart_id = db.Column(db.Integer,db.ForeignKey('cart_items.id'))
 
-    user_relationship = db.relationship('User', back_populates="session_relationship")
+    user_relationship = db.relationship('User', back_populates="shopping_session_relationship")
     cart_relationship = db.relationship('Cart_Item', back_populates="session_relationship")
 
     serialize_rules = ('-user_relationship', '-cart_relationship',)
@@ -75,14 +80,13 @@ class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(255), nullable = False, unique = True)
-    password = db.Column(db.String(255))
-    first_name = db.Column(db.String(255))
-    last_name = db.Column(db.String(255))
-    email = db.Column(db.String(255))
+    username = db.Column(db.String, nullable = False, unique = True)
+    password = db.Column(db.String)
+    first_name = db.Column(db.String)
+    last_name = db.Column(db.String)
+    email = db.Column(db.String)
     phone = db.Column(db.Integer)
-    role = db.Column(db.String(255))
-    # product_id=db.Column(db.Integer,db.ForeignKey('products.id'))
+    role = db.Column(db.String)
     _password_hash = db.Column(db.String, nullable=False)
 
     @hybrid_property
@@ -107,8 +111,10 @@ class User(db.Model, SerializerMixin):
 
     product_relationship = db.relationship('Product', back_populates="user_relationship", cascade="all, delete")
     payment_relationship = db.relationship('User_Payment', back_populates="user_relationship", cascade="all, delete")
+    cart_relationship = db.relationship('Cart_Item', back_populates="user_relationship",cascade="all, delete")
+    shopping_session_relationship = db.relationship('Shopping_Session', back_populates="user_relationship",cascade="all, delete")
 
-    serialize_rules = ('-payment_relationship','product_relationship',)
+    serialize_rules = ('product_relationship',)
 
 
 class User_Payment(db.Model, SerializerMixin):
