@@ -23,8 +23,8 @@ app.json.compact = False
 
 migrate = Migrate(app, db)
 
-db.init_app(app)
-api = Api(app)
+# db.init_app(app)
+# api = Api(app)
 
 # Views go here!
 
