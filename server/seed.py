@@ -21,7 +21,7 @@ def create_products():
             name = fake.name(),
             desc = fake.text(),
             sku = fake.ean(length=13),
-            copy = fake.text(),
+            long_desc = fake.text(),
             price = randint(1, 1000000),
             inventory = randint(1, 1000000),
             user_id = randint(1, 15),

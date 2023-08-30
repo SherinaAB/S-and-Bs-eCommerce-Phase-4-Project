@@ -29,7 +29,7 @@ class Product(db.Model, SerializerMixin):
     name = db.Column(db.String(255))
     desc = db.Column(db.String(255))
     sku = db.Column(db.Integer)
-    copy = db.Column(db.String(500))
+    long_desc = db.Column(db.String(500))
     price = db.Column(db.Float)
     inventory = db.Column(db.Integer)
 

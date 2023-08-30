@@ -49,14 +49,14 @@ class Users(Resource):
             return make_response({"errors": ["validation errors"]}, 422)
         return make_response(new_user.to_dict(), 201)
     
-    def delete(self, id):
-        user = User.query.filter_by(id=id).first()
-        if user:
-            db.session.delete(user)
-            db.session.commit()
-            return make_response(user.to_dict(), 200)
-        else:
-            return make_response({"errors": ["user not found"]}, 404)
+    # def delete(self, id):
+    #     user = User.query.filter_by(id=id).first()
+    #     if user:
+    #         db.session.delete(user)
+    #         db.session.commit()
+    #         return make_response(user.to_dict(), 200)
+    #     else:
+    #         return make_response({"errors": ["user not found"]}, 404)
         
 class UserById(Resource):
     def get(self, id):
@@ -82,9 +82,10 @@ class UserById(Resource):
                     setattr(user_by_id, attr, user_by_id[attr])
                     db.session.add(user_by_id)
                     db.session.commit()
+                return make_response(user_by_id.to_dict(), 200)    
             except ValueError:
                 return make_response({"errors": ["validation errors"]}, 422)
-            return make_response(user_by_id.to_dict(), 200)
+            
     
     def delete(self, id):
         user_by_id = User.query.filter_by(id=id).first()
@@ -136,17 +137,27 @@ class Products(Resource):
             name = fields['name']
             desc = fields['desc']
             sku = fields['sku']
-            copy = fields['copy']
+            long_desc = fields['long_desc']
             price = fields['price']
             inventory = fields['inventory']
             if name and desc and price:
-                new_product = Product(name=name, desc=desc, sku=sku, copy=copy, price=price, inventory=inventory)
+                new_product = Product(name=name, desc=desc, sku=sku, long_desc=long_desc, price=price, inventory=inventory)
                 db.session.add(new_product)
                 db.session.commit()
+                return make_response(new_product.to_dict(), 201)
         except ValueError:
             return make_response({"errors": ["validation errors"]}, 422)
-        return make_response(new_product.to_dict(), 201)
-    
+        
+class ProductsById(Resource):
+    def get(self, id):
+        products = Product.query.filter_by(id=id).first()
+  
+        if products == None:
+            products_dict = {"errors": ["user not found"]}
+            return make_response(products_dict, 404)
+        else:
+            return make_response(products.to_dict(), 200)
+      
     def patch(self, id):
         products = Product.query.filter_by(id=id).first()
 
@@ -157,13 +168,14 @@ class Products(Resource):
         else: 
             products = request.get_json()
             try:
-                for attr in products():
+                for attr in products:
                     setattr(products, attr, products[attr])
                     db.session.add(products)
                     db.session.commit()
+                
             except ValueError:
                 return make_response({"errors": ["validation errors"]}, 422)
-            return make_response(products.to_dict(), 200)    
+            return make_response(products, 200)
 
     def delete(self, id):
         products = Product.query.filter_by(id=id).first()
@@ -187,6 +199,7 @@ api.add_resource(Login, '/login')
 api.add_resource(CheckSession, '/check_session')
 api.add_resource(Logout, '/logout')
 api.add_resource(Products, '/products')
+api.add_resource(ProductsById, '/products/<int:id>')
 
 
         
