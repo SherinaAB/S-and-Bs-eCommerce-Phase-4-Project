@@ -38,7 +38,7 @@ class Product(db.Model, SerializerMixin):
     user_relationship = db.relationship('User', back_populates="product_relationship", cascade="all, delete")
     cart_relationship = db.relationship('Cart_Item', back_populates="product_relationship")
 
-    serialize_rules = ('-user_relationship',)
+    serialize_rules = ('-user_relationship','-cart_relationship',)
 
     # product_category_id = db.Column(db.Integer)
     # category_relationship = db.relationship('Category', back_populates="product_relationship", cascade="all, delete")
@@ -81,13 +81,14 @@ class User(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable = False, unique = True)
-    password = db.Column(db.String)
+    # password = db.Column(db.String)
     first_name = db.Column(db.String)
     last_name = db.Column(db.String)
     email = db.Column(db.String)
     phone = db.Column(db.Integer)
     role = db.Column(db.String)
     _password_hash = db.Column(db.String, nullable=False)
+    img = db.Column(db.String, nullable=True)
 
     @hybrid_property
     def password_hash(self):
@@ -114,7 +115,7 @@ class User(db.Model, SerializerMixin):
     cart_relationship = db.relationship('Cart_Item', back_populates="user_relationship",cascade="all, delete")
     shopping_session_relationship = db.relationship('Shopping_Session', back_populates="user_relationship",cascade="all, delete")
 
-    serialize_rules = ('product_relationship',)
+    serialize_rules = ('-product_relationship','-payment_relationship','-cart_relationship','-shopping_session_relationship',)
 
 
 class User_Payment(db.Model, SerializerMixin):
