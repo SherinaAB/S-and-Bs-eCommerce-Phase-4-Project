@@ -40,6 +40,12 @@ class Product(db.Model, SerializerMixin):
 
     serialize_rules = ('-user_relationship','-cart_relationship',)
 
+    @validates("price")
+    def validates_price(self,key,price):
+        if not price and 0 <= price:
+            raise ValueError("Price must exist as a positive number")
+        return price
+
     # product_category_id = db.Column(db.Integer)
     # category_relationship = db.relationship('Category', back_populates="product_relationship", cascade="all, delete")
     # cart_relationship = db.relationship('Cart_Item', back_populates="product_relationship",cascade="all, delete")
@@ -107,6 +113,16 @@ class User(db.Model, SerializerMixin):
     
     def __repr__(self):
         return f"<User {self.username}>"
+    
+    @validates("email")
+    def validate_email(self, key, email):
+        if "@" not in email:
+            raise ValueError("Email invalid")
+        if len(email) > 40:
+            raise ValueError(
+                "Email must be less than 40 characters long"
+            )
+        return email
 
     user_payment_id=db.Column(db.Integer,db.ForeignKey('payments.id'))
 
@@ -128,3 +144,15 @@ class User_Payment(db.Model, SerializerMixin):
     account_no = db.Column(db.Integer())
     expiry = db.Column(db.Date)
     user_relationship = db.relationship('User', back_populates="payment_relationship")
+
+    @validates("account_no",)
+    def validates_account_no(self,key,account_no):
+        if not account_no and len(account_no) <= 16:
+            raise ValueError("Account number must be 16 digits long")
+        return account_no
+    
+    @validates("expiry",)
+    def validates_expiry(self,key,expiry):
+        if not expiry and len(expiry) <= 4:
+            raise ValueError("Expiration date must be 4 digits long")
+        return expiry
