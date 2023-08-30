@@ -76,10 +76,10 @@ class UserById(Resource):
 
             return make_response(user_by_id_dict, 404)
         else: 
-            user_by_id = request.get_json()
+            fields = request.get_json()
             try:
-                for attr in user_by_id():
-                    setattr(user_by_id, attr, user_by_id[attr])
+                for attr in fields:
+                    setattr(user_by_id, attr, fields[attr])
                     db.session.add(user_by_id)
                     db.session.commit()
                 return make_response(user_by_id.to_dict(), 200)    
@@ -166,16 +166,16 @@ class ProductsById(Resource):
 
             return make_response(products_dict, 404)
         else: 
-            products = request.get_json()
+            fields = request.get_json()
             try:
-                for attr in products:
-                    setattr(products, attr, products[attr])
+                for attr in fields:
+                    setattr(products, attr, fields[attr])
                     db.session.add(products)
                     db.session.commit()
-                
+                return make_response(products.to_dict(), 200)
             except ValueError:
                 return make_response({"errors": ["validation errors"]}, 422)
-            return make_response(products, 200)
+            
 
     def delete(self, id):
         products = Product.query.filter_by(id=id).first()
@@ -189,8 +189,23 @@ class ProductsById(Resource):
             db.session.commit()
             products_dict = {}
             return make_response(products.to_dict(), 200)
-        
-        
+
+class User_Payments(Resource):
+    def get(self):
+        payments = [p.to_dict() for p in User_Payment.query.all()]
+        return make_response(payments, 200)
+    
+    def post(self):
+        payments = User_Payment.query.filter(User.id == session.get('user_id')).first()
+        if payments:
+            return payments.to_dict()
+        else:
+            return {'message': '401: Not Authorized'}, 401
+    
+    def delete(self):
+        session['user_id'] = None
+        return {'message':'204: No Content'}
+
 
         
 api.add_resource(Users, '/users')
@@ -200,10 +215,6 @@ api.add_resource(CheckSession, '/check_session')
 api.add_resource(Logout, '/logout')
 api.add_resource(Products, '/products')
 api.add_resource(ProductsById, '/products/<int:id>')
-
-
-        
-
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
