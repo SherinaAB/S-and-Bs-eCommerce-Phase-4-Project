@@ -176,7 +176,6 @@ class ProductsById(Resource):
             except ValueError:
                 return make_response({"errors": ["validation errors"]}, 422)
             
-
     def delete(self, id):
         products = Product.query.filter_by(id=id).first()
 
@@ -202,11 +201,102 @@ class User_Payments(Resource):
         else:
             return {'message': '401: Not Authorized'}, 401
     
+class User_PaymentsById(Resource):
+    def get(self, id):
+        payments = User_Payment.query.filter_by(id=id).first() 
+
+        if payments == None:
+            payments_dict = {"errors": ["user not found"]}       
+            return make_response(payments_dict, 404)
+        else:
+            return make_response(payments.to_dict(),200)
+
+    def patch(self, id):
+        payments = User_Payment.query.filter_by(id=id).first()
+
+        if payments == None:
+            payments_dict = {"errors": ["user not found"]}
+
+            return make_response(payments_dict, 404)
+        else: 
+            fields = request.get_json()
+            try:
+                for attr in fields:
+                    setattr(payments, attr, fields[attr])
+                    db.session.add(payments)
+                    db.session.commit()
+                return make_response(payments.to_dict(), 200)
+            except ValueError:
+                return make_response({"errors": ["validation errors"]}, 422)
+                
     def delete(self):
         session['user_id'] = None
         return {'message':'204: No Content'}
 
+class Cart_Items(Resource):
+    def get(self):
+        cart = [c.to_dict() for c in Cart_Item.query.all()]
+        return make_response(cart, 200)
+    
+    def post(self):
+        fields = request.get_json()
 
+        try:
+            qty = fields['quantity']
+
+
+
+
+
+            if qty:
+                new_qty = Cart_Item(qty=qty)
+
+                db.session.add(new_qty)
+                db.session.commit()
+                return make_response(new_qty.to_dict(), 201)
+        except ValueError:
+            return make_response({"errors": ["validation errors"]}, 422)
+        
+class Cart_ItemsById(Resource):
+    def get(self, id):
+        cart = Cart_Item.query.filter_by(id=id).first()
+  
+        if cart == None:
+            cart_dict = {"errors": ["user not found"]}
+            return make_response(cart_dict, 404)
+        else:
+            return make_response(cart.to_dict(), 200)
+      
+    def patch(self, id):
+        cart = Cart_Item.query.filter_by(id=id).first()
+
+        if cart == None:
+            cart_dict = {"errors": ["user not found"]}
+
+            return make_response(cart_dict, 404)
+        else: 
+            fields = request.get_json()
+            try:
+                for attr in fields:
+                    setattr(cart, attr, fields[attr])
+                    db.session.add(cart)
+                    db.session.commit()
+                return make_response(cart.to_dict(), 200)
+            except ValueError:
+                return make_response({"errors": ["validation errors"]}, 422)
+            
+    def delete(self, id):
+        cart = Cart_Item.query.filter_by(id=id).first()
+
+        if cart == None:
+            cart_dict = {"errors": ["user not found"]}
+
+            return make_response(cart_dict, 404)
+        else:
+            db.session.delete(cart)
+            db.session.commit()
+            cart_dict = {}
+            return make_response(cart.to_dict(), 200)
         
 api.add_resource(Users, '/users')
 api.add_resource(UserById, '/users/<int:id>')
@@ -215,6 +305,9 @@ api.add_resource(CheckSession, '/check_session')
 api.add_resource(Logout, '/logout')
 api.add_resource(Products, '/products')
 api.add_resource(ProductsById, '/products/<int:id>')
+api.add_resource(User_Payments, '/user_payments')
+api.add_resource(User_PaymentsById, '/user_payments/<int:id>')
+
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
