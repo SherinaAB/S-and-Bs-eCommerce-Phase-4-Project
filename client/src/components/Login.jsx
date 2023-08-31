@@ -1,12 +1,15 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory} from "react-router-dom";
 import { useState } from "react";
 
 
 // would like to add functionality to create an account to route to new page
-export default function Login({setUser}) {
+export default function Login({updateUser}) {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [signup, setSignup] = useState(false)
+  const history = useHistory()
+ 
   
   function handleUsername(e){
     setUsername(e.target.value)
@@ -16,28 +19,42 @@ export default function Login({setUser}) {
     setPassword(e.target.value)
   }
 
+  function handleClick(){
+    setSignup(!signup)
+  }
+
+  
+
   function handleSubmit(e){
     e.preventDefault()
-    fetch("/api/users", {
+    fetch(signup?"/api/users":"/api/login", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({username: username, password: password})
     })
-    .then(res => res.json())
-    .then(data => setUser(data))
+    .then( res=> {
+      if(res.ok){
+        res.json().then(user => {
+          console.log(user)
+          updateUser(user)
+          history.push('/')
+        })
+      }
+    })
   }
 
-  function handleLogout(e){
-    e.preventDefault()
-    fetch("/api/logout", {
-      method: "DELETE",
-      headers: {"Content-Type": "application/json"},
-    })
-    .then(setUser(null))
-  }
+  // function handleLogout(e){
+  //   e.preventDefault()
+  //   fetch("/api/logout", {
+  //     method: "DELETE",
+  //     headers: {"Content-Type": "application/json"},
+  //   })
+  //   .then(setUser(null))
+  // }
   
   return (
     <>
+      
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           {/* <img
@@ -124,9 +141,10 @@ export default function Login({setUser}) {
               >
                 Sign in
               </button>
+              <button onClick={handleClick}>{signup?"Register":"Login"}</button>
             </div>
             {/* button to sign out */}
-            <div>
+            {/* <div>
               <button
                 type="submit"
                 onClick={handleLogout}
@@ -134,15 +152,10 @@ export default function Login({setUser}) {
               >
                 Sign out
               </button>
-            </div>
+            </div> */}
           </form>
 
-          <p className="mt-10 text-center text-sm text-gray-500">
-            Not a member?{' '}
-            <Link to="/createaccount" href="#" className="font-semibold leading-6 text-pink-600 hover:text-pink-500">
-              Create an account
-            </Link>
-          </p>
+          
         </div>
       </div>
     </>
