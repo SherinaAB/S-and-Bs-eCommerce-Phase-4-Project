@@ -32,21 +32,17 @@ class Users(Resource):
 
         fields = request.get_json()
 
-        try:
-            username = fields['username']
-            password = fields['password']
-            email = fields['email']
-            if username and password and email:
-                new_user = User(username=username, password=password, email=email)
-                new_user.password_hash = password
-                
-                db.session.add(new_user)
-                db.session.commit()
-
-                session['user_id'] = new_user.id
-            
-        except ValueError:
-            return make_response({"errors": ["validation errors"]}, 422)
+        # username = fields['username']
+        # password = fields['password']
+        # email = fields['email']
+        new_user = User(username=fields['username'], password_hash=fields['password'],)
+        # new_user = User(username=username, password=password, email=email)
+        db.session.add(new_user)
+        db.session.commit()
+        session['user_id'] = new_user.id
+        
+    # except ValueError:
+    #     return make_response({"errors": ["validation errors"]}, 422)
         return make_response(new_user.to_dict(), 201)
     
 class UserById(Resource):
