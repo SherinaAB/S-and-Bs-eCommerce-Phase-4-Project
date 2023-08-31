@@ -16,6 +16,7 @@ def create_database():
 
 def create_products():
     products = []
+    image = ["https://cdn.shopify.com/s/files/1/0568/1132/3597/products/q1f3ss2bzxpp3l2ubxah_600x600.jpg?v=1691012794",'https://creations.mattel.com/cdn/shop/products/ceifjw9jookgvrixoxbc.jpg?v=1692377787','https://creations.mattel.com/cdn/shop/products/a4v1otoem9ric3p0fbsq.jpg?v=1690567879','https://cdn.shopify.com/s/files/1/0568/1132/3597/files/HYC86_Apliiq_White_Hat_044_600x600.jpg?v=1685497815','https://creations.mattel.com/cdn/shop/files/HYC94_Apliiq_Jean_Jacket_Front_009.jpg?v=1685556765','https://creations.mattel.com/cdn/shop/products/FUNBOY-BARBIE-ICONIC-B-POOL-FLOAT.1-min_1.jpg?v=1689701454','https://creations.mattel.com/cdn/shop/products/urd6b13byyhdhemys53s.jpg?v=1686156891','https://cdn.shopify.com/s/files/1/0568/1132/3597/files/HYM61_Tshirt_HiKen_Blue_02_600x600.jpg?v=1690309476']
     for _ in range(50):
         p = Product(
             name = fake.name(),
@@ -25,6 +26,7 @@ def create_products():
             price = randint(1, 1000000),
             inventory = randint(1, 1000000),
             user_id = randint(1, 15),
+            image = rc(image),
         )
         products.append(p)
     return products

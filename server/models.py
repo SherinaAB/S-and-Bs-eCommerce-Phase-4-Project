@@ -32,6 +32,7 @@ class Product(db.Model, SerializerMixin):
     long_desc = db.Column(db.String(500))
     price = db.Column(db.Float)
     inventory = db.Column(db.Integer)
+    image = db.Column(db.String)
 
     user_id=db.Column(db.Integer,db.ForeignKey('users.id'))
 
