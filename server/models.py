@@ -142,7 +142,8 @@ class User_Payment(db.Model, SerializerMixin):
     payment_type = db.Column(db.String(255))
     provider = db.Column(db.String(100))
     account_no = db.Column(db.Integer())
-    expiry = db.Column(db.Date)
+    expiry = db.Column(db.String)
+
     user_relationship = db.relationship('User', back_populates="payment_relationship")
 
     @validates("account_no",)
