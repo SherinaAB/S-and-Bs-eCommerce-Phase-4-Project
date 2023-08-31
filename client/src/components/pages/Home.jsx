@@ -1,7 +1,7 @@
 import React from "react";
 import Products from "./Products";
 
-function Home() {
+function Home({products}) {
   return (
     <>
     {/* this is for a hero page and need to adjust the colors */}
@@ -22,10 +22,7 @@ function Home() {
         </div>
       </div>
 
-      {/* <div>
-            <h1>SHOP BARBIE THE MOVIE MERCH</h1>
-        </div> */}
-        <Products />
+        <Products products={products}/>
     </>
   );
 }
