@@ -26,9 +26,6 @@ function NavBar() {
             tabIndex={0}
             className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
           >
-            {/* <li>
-              <Link to="/contact">Contact</Link>
-            </li> */}
             <li>
               <Link to="/about">About</Link>
             </li>
@@ -36,7 +33,7 @@ function NavBar() {
               <Link to="/login">Login</Link>
             </li>
             <li>
-              <Link to="/createaccount">Create Account</Link>
+              <Link to="/addnewitem">Add Item</Link>
             </li>
           </ul>
         </div>
