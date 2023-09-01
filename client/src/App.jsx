@@ -1,4 +1,4 @@
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
+import {BrowserRouter as Router, Switch, Route, useHistory} from 'react-router-dom'
 import { useState,useEffect } from 'react'
 import './App.css'
 import Login from './components/Login'
@@ -6,19 +6,37 @@ import NavBar from './components/NavBar'
 import Home from './components/pages/Home'
 import About from './components/pages/About'
 import AddNewItem from './components/pages/AddNewItem'
+import UpdateProduct from './components/pages/UpdateProducts'
 // import ShoppingCart from './components/pages/ShoppingCart'
 
 
 function App() {
-  const [user, setUser] = useState(null)
+  //products state & fetch
   const [products, setProducts] = useState([])
+  const [productId, setProductId] = useState()
+  const history = useHistory()
 
+  function updateProduct(product){
+    setProducts(prod => prod.map(p => p.id == product.id ? product : p))
+
+  }
+
+  function handleEdit(product){
+    console.log(product)
+    setProductId(product)
+  }
   useEffect(() => {
     fetch('/api/products')
     .then(res => res.json())
-    .then(dat => setProducts(dat))
+    .then(data => setProducts(data))
   }, [])
 
+  function addNewProduct(newProduct){
+    setProducts([...products, newProduct])
+  }
+
+  //user state & fetch
+  const [user, setUser] = useState(null)
   function updateUser(new_user){
     setUser(new_user)
   }
@@ -40,6 +58,7 @@ function App() {
     fetchUsers()
   },[])
 
+  //if not user, they will see
   if(!user){
     return (
     <>
@@ -60,33 +79,27 @@ function App() {
           </Route>
         </Switch>
     </Router>
-    {/* <Login updateUser={updateUser}/> */}
     </>
     )
   }
   
-  // if user
+  // if logged in, vendor will see
   return (
     <Router>
       <NavBar />
         <Switch>
           <Route exact path="/">
-            <Home/>
+            <Home products={products} handleEdit = {handleEdit}/>
           </Route>
           <Route exact path="/about">
             <About/>
           </Route>
-          <Route exact path="/contact">
-            <About/>
-          </Route>
           <Route exact path="/addnewitem">
-            <AddNewItem/>
+            <AddNewItem addNewProduct={addNewProduct}/>
           </Route>
-          {/* <Route path="/login" element={Login}></Route>
-          <Route path="/about" element={About}></Route>
-          <Route path="/contact" element={Contact}></Route>
-          <Route path="/createaccount" element={CreateAccount}></Route>
-          <Route path="/shoppingcart" element={ShoppingCart}></Route> */}
+          <Route exact path="/updateproduct/edit/:id">
+            <UpdateProduct updateProduct = {updateProduct} productId={productId}/>
+          </Route>
         </Switch>
     </Router>
   )
