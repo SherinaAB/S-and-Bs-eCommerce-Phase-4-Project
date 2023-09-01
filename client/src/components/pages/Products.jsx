@@ -68,7 +68,7 @@ const products = [
 ]
 function Products() {
 
-  const [count, setCount] = useState(0);
+  let [count, setCount] = useState(0);
 
   function increaseCount(){
     // e.preventDefault()

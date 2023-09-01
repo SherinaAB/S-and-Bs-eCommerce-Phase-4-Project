@@ -38,6 +38,9 @@ function NavBar() {
             <li>
               <Link to="/createaccount">Create Account</Link>
             </li>
+            {/* <li>
+              <Link to="/logout">Logout</Link>
+            </li> */}
           </ul>
         </div>
       </div>

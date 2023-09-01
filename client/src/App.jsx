@@ -106,7 +106,7 @@ function App() {
             <About/>
           </Route>
           <Route exact path="/login">
-            <Login/>
+            <Login updateUser={updateUser}/>
           </Route>
         </Switch>
     </Router>

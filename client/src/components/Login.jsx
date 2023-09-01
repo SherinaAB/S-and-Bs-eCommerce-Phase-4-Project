@@ -43,14 +43,40 @@ export default function Login({updateUser}) {
     })
   }
 
-  // function handleLogout(e){
-  //   e.preventDefault()
-  //   fetch("/api/logout", {
-  //     method: "DELETE",
-  //     headers: {"Content-Type": "application/json"},
-  //   })
-  //   .then(setUser(null))
-  // }
+//   function handleShoppingSession(e){
+//     e.preventDefault()
+//     fetch("/api/shoppingsession", {
+//       method: "POST",
+//       headers: {"Content-Type": "application/json"},
+//       body: JSON.stringify({username: username, password: password})
+//     })
+//    .then( res=> {
+//     if(res.ok){
+//       res.json().then(user => {
+//         console.log(user)
+//         updateUser(user)
+//         history.push('/')
+//       })
+//     }
+//   })
+// }
+
+
+  function handleLogout(e){
+    e.preventDefault()
+    fetch("/api/logout", {
+      method: "DELETE",
+      headers: {"Content-Type": "application/json"},
+    })
+    .then( res=> {
+      if(res.ok){
+          console.log(user)
+          updateUser(null)
+          history.push('/login')
+      }
+    })
+    
+  }
   
   return (
     <>
@@ -142,6 +168,8 @@ export default function Login({updateUser}) {
                 Sign in
               </button>
               <button onClick={handleClick}>{signup?"Register":"Login"}</button>
+              <br></br>
+              <button onClick={handleLogout}>{"Logout"}</button>
             </div>
             {/* button to sign out */}
             {/* <div>
