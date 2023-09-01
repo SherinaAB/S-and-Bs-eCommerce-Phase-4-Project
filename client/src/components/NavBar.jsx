@@ -41,7 +41,9 @@ function NavBar() {
       <div className="navbar-center">
         <Link to="/" className="btn btn-ghost normal-case text-xl">Fun Times</Link>
       </div>
-      <div className="navbar-end">
+
+    {/* //search icon and shopping cart */}
+      {/* <div className="navbar-end">
         <button className="btn btn-ghost btn-circle">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -93,7 +95,8 @@ function NavBar() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
+
     </div>
   );
 }
