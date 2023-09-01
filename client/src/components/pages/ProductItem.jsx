@@ -1,7 +1,18 @@
 import React from 'react'
-import {Link} from "react-router-dom"
+import {Link, useHistory} from "react-router-dom"
 function ProductItem({product,handleEdit}) {
-    // console.log(product)
+    const history = useHistory()
+    function handleDelete(e) {
+      fetch(`/api/products/${product.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      e.reset()
+
+    }
     return (
         <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
@@ -26,9 +37,8 @@ function ProductItem({product,handleEdit}) {
                 >
                   Add to bag
                 </button>
-
-                <button onClick={()=>handleEdit(product.id)}>Update Item</button>
-                {/* <Link to="/updateproduct/edit/:id">Update Item</Link> */}
+                <Link to={`/updateproduct/edit/${product.id}`}>Update Item</Link>
+                <button onClick={handleDelete}>Delete</button>
               </a>
           </div>
         </div>

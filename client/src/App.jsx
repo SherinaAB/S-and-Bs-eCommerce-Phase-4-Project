@@ -16,14 +16,13 @@ function App() {
   const [productId, setProductId] = useState()
   const history = useHistory()
 
-  function updateProduct(product){
-    setProducts(prod => prod.map(p => p.id == product.id ? product : p))
+  const updateProduct = (newProducts) => setProducts(products => products.map(product => product.id === newProducts.id? newProducts : product))
+  console.log(updateProduct)
 
-  }
-
-  function handleEdit(product){
+  function handleEdit(product, history){
     console.log(product)
     setProductId(product)
+    
   }
   useEffect(() => {
     fetch('/api/products')
@@ -66,7 +65,7 @@ function App() {
     <NavBar />
     <Switch>
           <Route exact path="/">
-            <Home products={products}/>
+            <Home products={products} history = {history} handleEdit={handleEdit}/>
           </Route>
           <Route exact path="/about">
             <About/>
