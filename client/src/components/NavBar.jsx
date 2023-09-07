@@ -26,9 +26,9 @@ function NavBar() {
             tabIndex={0}
             className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
           >
-            <li>
+            {/* <li>
               <Link to="/about">About</Link>
-            </li>
+            </li> */}
             <li>
               <Link to="/login">Login</Link>
             </li>
@@ -42,7 +42,9 @@ function NavBar() {
         <Link to="/" className="btn btn-ghost normal-case text-xl">Fun Times</Link>
       </div>
       <div className="navbar-end">
-        <button className="btn btn-ghost btn-circle">
+
+
+        {/* <button className="btn btn-ghost btn-circle">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
@@ -92,7 +94,8 @@ function NavBar() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
+
       </div>
     </div>
   );

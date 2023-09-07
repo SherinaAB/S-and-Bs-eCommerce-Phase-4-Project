@@ -7,7 +7,6 @@ import Home from './components/pages/Home'
 import About from './components/pages/About'
 import AddNewItem from './components/pages/AddNewItem'
 import UpdateProduct from './components/pages/UpdateProducts'
-// import ShoppingCart from './components/pages/ShoppingCart'
 
 
 function App() {
